@@ -7,7 +7,6 @@ package recovery
 import (
 	"bytes"
 	"fmt"
-	"ggu/ginutil/response"
 	"io"
 	"log"
 	"net"
@@ -17,6 +16,8 @@ import (
 	"runtime"
 	"strings"
 	"time"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/response"
 
 	"github.com/gin-gonic/gin"
 )

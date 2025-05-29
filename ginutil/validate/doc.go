@@ -17,7 +17,7 @@ validate 包是对 go-playground/validator/v10 的封装，提供了更易用的
 
 ## 基本用法
 
-	import "ggu/ginutil/validate"
+	import "github.com/noobtrump/go-generic-utils/ginutil/validate"
 
 	type User struct {
 		Name     string `json:"name" validate:"required,min=2,max=50"`

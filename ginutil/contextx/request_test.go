@@ -1,11 +1,12 @@
 package contextx_test
 
 import (
-	"ggu/ginutil/contextx"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/contextx"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"

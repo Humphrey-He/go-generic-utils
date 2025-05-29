@@ -2,9 +2,10 @@ package response_test
 
 import (
 	"fmt"
-	"ggu/ginutil/ecode"
-	"ggu/ginutil/response"
 	"net/http/httptest"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/ecode"
+	"github.com/noobtrump/go-generic-utils/ginutil/response"
 
 	"github.com/gin-gonic/gin"
 )

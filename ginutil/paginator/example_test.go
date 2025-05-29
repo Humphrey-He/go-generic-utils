@@ -3,11 +3,12 @@ package paginator_test
 import (
 	"encoding/base64"
 	"fmt"
-	"ggu/ginutil/paginator"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
 	"time"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/paginator"
 
 	"github.com/gin-gonic/gin"
 )

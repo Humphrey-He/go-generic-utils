@@ -2,10 +2,11 @@ package security_test
 
 import (
 	"fmt"
-	"ggu/ginutil/security"
 	"net/http"
 	"net/http/httptest"
 	"strings"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/security"
 
 	"github.com/gin-gonic/gin"
 )

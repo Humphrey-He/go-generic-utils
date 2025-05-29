@@ -6,9 +6,10 @@ package timeout
 
 import (
 	"context"
-	"ggu/ginutil/response"
 	"net/http"
 	"time"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/response"
 
 	"github.com/gin-gonic/gin"
 )

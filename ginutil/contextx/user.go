@@ -2,7 +2,7 @@
 package contextx
 
 import (
-	"ggu/ginutil/middleware/auth"
+	"github.com/noobtrump/go-generic-utils/ginutil/middleware/auth"
 
 	"github.com/gin-gonic/gin"
 )

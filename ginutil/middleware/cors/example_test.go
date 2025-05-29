@@ -2,10 +2,11 @@ package cors_test
 
 import (
 	"fmt"
-	"ggu/ginutil/middleware/cors"
 	"net/http/httptest"
 	"strings"
 	"time"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/middleware/cors"
 
 	"github.com/gin-gonic/gin"
 )

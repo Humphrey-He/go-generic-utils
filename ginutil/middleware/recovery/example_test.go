@@ -3,9 +3,10 @@ package recovery_test
 import (
 	"bytes"
 	"fmt"
-	"ggu/ginutil/middleware/recovery"
 	"net/http/httptest"
 	"strings"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/middleware/recovery"
 
 	"github.com/gin-gonic/gin"
 )

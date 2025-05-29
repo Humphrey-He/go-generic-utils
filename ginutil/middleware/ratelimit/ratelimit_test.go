@@ -1,12 +1,13 @@
 package ratelimit_test
 
 import (
-	"ggu/ginutil/middleware/ratelimit"
 	"net/http"
 	"net/http/httptest"
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/middleware/ratelimit"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"

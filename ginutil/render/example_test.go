@@ -2,8 +2,9 @@ package render_test
 
 import (
 	"fmt"
-	"ggu/ginutil/render"
 	"net/http"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/render"
 
 	"github.com/gin-gonic/gin"
 )

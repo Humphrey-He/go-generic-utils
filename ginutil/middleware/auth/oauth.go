@@ -5,12 +5,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"ggu/ginutil/ecode"
-	"ggu/ginutil/response"
 	"io"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/ecode"
+	"github.com/noobtrump/go-generic-utils/ginutil/response"
 
 	"github.com/gin-gonic/gin"
 )

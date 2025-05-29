@@ -2,10 +2,11 @@ package validate_test
 
 import (
 	"fmt"
-	"ggu/ginutil/validate"
 	"net/http"
 	"net/http/httptest"
 	"strings"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/validate"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"

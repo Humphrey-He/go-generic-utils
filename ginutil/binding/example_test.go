@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"strings"
 
-	"ggu/ginutil/binding"
+	"github.com/noobtrump/go-generic-utils/ginutil/binding"
 
 	"github.com/gin-gonic/gin"
 )

@@ -1,8 +1,9 @@
 package response
 
 import (
-	"ggu/ginutil/ecode"
 	"net/http"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/ecode"
 
 	"github.com/gin-gonic/gin"
 )

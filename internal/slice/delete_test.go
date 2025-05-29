@@ -1,8 +1,9 @@
 package slice
 
 import (
-	"ggu/internal/errs"
 	"testing"
+
+	"github.com/noobtrump/go-generic-utils/internal/errs"
 
 	"github.com/stretchr/testify/assert"
 )

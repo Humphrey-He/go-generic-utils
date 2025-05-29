@@ -2,10 +2,11 @@ package timeout_test
 
 import (
 	"fmt"
-	"ggu/ginutil/middleware/timeout"
 	"net/http"
 	"net/http/httptest"
 	"time"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/middleware/timeout"
 
 	"github.com/gin-gonic/gin"
 )

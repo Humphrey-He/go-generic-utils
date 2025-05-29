@@ -1,9 +1,10 @@
 package contextx_test
 
 import (
-	"ggu/ginutil/contextx"
-	"ggu/ginutil/middleware/auth"
 	"testing"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/contextx"
+	"github.com/noobtrump/go-generic-utils/ginutil/middleware/auth"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -53,7 +54,7 @@ func TestGetUserID(t *testing.T) {
 	}
 
 	// 设置用户身份信息
-	c.Set(auth.UserIdentityKey, identity)
+	contextx.SetUserIdentity(c, identity)
 
 	// 测试 GetUserID
 	userID, exists := contextx.GetUserID[int](c)
@@ -86,7 +87,7 @@ func TestGetUsername(t *testing.T) {
 	}
 
 	// 设置用户身份信息
-	c.Set(auth.UserIdentityKey, identity)
+	contextx.SetUserIdentity(c, identity)
 
 	// 测试 GetUsername
 	username, exists := contextx.GetUsername[int](c)
@@ -104,7 +105,7 @@ func TestGetUserRoles(t *testing.T) {
 	}
 
 	// 设置用户身份信息
-	c.Set(auth.UserIdentityKey, identity)
+	contextx.SetUserIdentity(c, identity)
 
 	// 测试 GetUserRoles
 	roles, exists := contextx.GetUserRoles[int, string](c)
@@ -122,7 +123,7 @@ func TestHasRole(t *testing.T) {
 	}
 
 	// 设置用户身份信息
-	c.Set(auth.UserIdentityKey, identity)
+	contextx.SetUserIdentity(c, identity)
 
 	// 测试 HasRole
 	assert.True(t, contextx.HasRole[int, string](c, "admin"), "用户应该具有 admin 角色")
@@ -148,7 +149,7 @@ func TestGetTenantID(t *testing.T) {
 	}
 
 	// 设置用户身份信息
-	c.Set(auth.UserIdentityKey, identity)
+	contextx.SetUserIdentity(c, identity)
 
 	// 测试 GetTenantID
 	tenantID, exists := contextx.GetTenantID[int](c)
@@ -170,7 +171,7 @@ func TestGetUserExtraData(t *testing.T) {
 	}
 
 	// 设置用户身份信息
-	c.Set(auth.UserIdentityKey, identity)
+	contextx.SetUserIdentity(c, identity)
 
 	// 测试 GetUserExtraData
 	age, exists := contextx.GetUserExtraData[int, int](c, "age")

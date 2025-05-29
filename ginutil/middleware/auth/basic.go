@@ -3,9 +3,10 @@ package auth
 import (
 	"encoding/base64"
 	"errors"
-	"ggu/ginutil/ecode"
-	"ggu/ginutil/response"
 	"strings"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/ecode"
+	"github.com/noobtrump/go-generic-utils/ginutil/response"
 
 	"github.com/gin-gonic/gin"
 )

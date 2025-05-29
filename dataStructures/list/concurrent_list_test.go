@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"ggu/internal/errs"
+	"github.com/noobtrump/go-generic-utils/internal/errs"
 
 	"github.com/stretchr/testify/assert"
 )

@@ -11,7 +11,8 @@ package auth
 
 import (
 	"errors"
-	"ggu/ginutil/response"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/response"
 
 	"github.com/gin-gonic/gin"
 )

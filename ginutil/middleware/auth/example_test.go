@@ -3,10 +3,11 @@ package auth_test
 import (
 	"encoding/json"
 	"fmt"
-	"ggu/ginutil/middleware/auth"
 	"net/http"
 	"net/http/httptest"
 	"time"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/middleware/auth"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"

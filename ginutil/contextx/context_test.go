@@ -1,8 +1,9 @@
 package contextx_test
 
 import (
-	"ggu/ginutil/contextx"
 	"testing"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/contextx"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"

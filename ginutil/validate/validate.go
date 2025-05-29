@@ -7,7 +7,7 @@ import (
 	"strings"
 	"sync"
 
-	"ggu/ginutil/binding"
+	"github.com/noobtrump/go-generic-utils/ginutil/binding"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"

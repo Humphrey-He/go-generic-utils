@@ -2,10 +2,11 @@ package ratelimit_test
 
 import (
 	"fmt"
-	"ggu/ginutil/middleware/ratelimit"
 	"net/http"
 	"net/http/httptest"
 	"time"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/middleware/ratelimit"
 
 	"github.com/gin-gonic/gin"
 )

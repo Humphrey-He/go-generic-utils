@@ -2,8 +2,9 @@ package register_test
 
 import (
 	"fmt"
-	"ggu/ginutil/register"
 	"net/http"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/register"
 
 	"github.com/gin-gonic/gin"
 )

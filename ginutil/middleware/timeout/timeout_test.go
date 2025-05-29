@@ -1,11 +1,12 @@
 package timeout_test
 
 import (
-	"ggu/ginutil/middleware/timeout"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/middleware/timeout"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"

@@ -3,10 +3,11 @@ package logger_test
 import (
 	"bytes"
 	"fmt"
-	"ggu/ginutil/middleware/logger"
 	"net/http/httptest"
 	"regexp"
 	"time"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/middleware/logger"
 
 	"github.com/gin-gonic/gin"
 )

@@ -5,10 +5,11 @@
 package ratelimit
 
 import (
-	"ggu/ginutil/response"
 	"net/http"
 	"sync"
 	"time"
+
+	"github.com/noobtrump/go-generic-utils/ginutil/response"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/time/rate"
