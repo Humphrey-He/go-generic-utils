@@ -106,7 +106,7 @@ GGU 遵循[语义化版本控制](https://semver.org/lang/zh-CN/)规范，版本
 发布后，Go 包索引会自动更新。用户可以通过以下命令获取新版本：
 
 ```bash
-go get github.com/noobtrump/go-generic-utils@vX.Y.Z
+go get github.com/Humphrey-He/go-generic-utils@vX.Y.Z
 ```
 
 ## 特殊版本类型

@@ -66,7 +66,7 @@ ggu/
 ## 💻 安装
 
 ```bash
-go get github.com/noobtrump/go-generic-utils
+go get github.com/Humphrey-He/go-generic-utils
 ```
 
 ## 🧩 核心模块说明
@@ -393,5 +393,5 @@ make lint
 
 如有任何问题或建议，请通过以下方式联系我们：
 
-- GitHub Issues: [https://github.com/noobtrump/go-generic-utils/issues](https://github.com/noobtrump/go-generic-utils/issues)
+- GitHub Issues: [https://github.com/Humphrey-He/go-generic-utils/issues](https://github.com/Humphrey-He/go-generic-utils/issues)
 - 邮箱：steve1484121793@gmail.com
