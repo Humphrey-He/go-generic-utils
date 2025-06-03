@@ -4,6 +4,7 @@
   <img src="https://img.shields.io/badge/Go-1.18+-00ADD8?style=for-the-badge&logo=go" alt="Go Version">
   <img src="https://img.shields.io/badge/License-Apache_2.0-blue?style=for-the-badge" alt="License">
   <img src="https://img.shields.io/badge/Type-Library-green?style=for-the-badge" alt="Type">
+  <img src="https://img.shields.io/badge/Version-v1.0.0-orange?style=for-the-badge" alt="Version">
 </p>
 
 GGU (Go Generic Utils) 是一个现代化的、基于泛型的 Go 语言工具库，专为高性能后端开发设计。利用 Go 1.18+ 引入的泛型特性，该库提供了各种实用的数据结构、算法和辅助工具，帮助开发者构建更高效、更可靠的应用程序。
@@ -381,6 +382,12 @@ make lint
 ## 📄 许可证
 
 本项目基于 Apache License 2.0 许可证开源 - 详见 [LICENSE](LICENSE) 文件
+
+## 📝 版本信息
+
+当前版本：v1.0.0
+
+查看完整的[变更日志](CHANGELOG.md)了解各版本的详细变更。
 
 ## 📞 联系我们
 

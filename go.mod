@@ -1,6 +1,6 @@
 module github.com/noobtrump/go-generic-utils
 
-go 1.23.6
+go 1.22
 
 require github.com/stretchr/testify v1.10.0
 
