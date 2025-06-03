@@ -1,4 +1,4 @@
-// Copyright 2024 ecodeclub
+// Copyright 2024 Humphrey-He
 //
 // 本文件为 mapx.go 的示例文件，演示泛型Map、线程安全Map、链表Map、TreeMap、多值Map等常用用法。
 

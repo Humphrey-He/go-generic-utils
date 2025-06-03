@@ -1,6 +1,7 @@
 package maputils
 
 import (
+	"sort"
 	"sync"
 
 	"golang.org/x/exp/constraints"
@@ -55,6 +56,88 @@ func (m *GenericMap[K, V]) Values() []V {
 // Len 返回元素数量
 func (m *GenericMap[K, V]) Len() int {
 	return len(m.data)
+}
+
+// Map 对每个键值对应用变换函数，返回新的Map
+// 由于Go方法不能有自己的类型参数，改为使用接口类型
+func (m *GenericMap[K, V]) Map(mapper interface{}) interface{} {
+	switch fn := mapper.(type) {
+	case func(K, V) (string, int):
+		result := NewGenericMap[string, int]()
+		for k, v := range m.data {
+			k2, v2 := fn(k, v)
+			result.Set(k2, v2)
+		}
+		return result
+	case func(K, V) (string, string):
+		result := NewGenericMap[string, string]()
+		for k, v := range m.data {
+			k2, v2 := fn(k, v)
+			result.Set(k2, v2)
+		}
+		return result
+	case func(K, V) (int, string):
+		result := NewGenericMap[int, string]()
+		for k, v := range m.data {
+			k2, v2 := fn(k, v)
+			result.Set(k2, v2)
+		}
+		return result
+	case func(K, V) (int, int):
+		result := NewGenericMap[int, int]()
+		for k, v := range m.data {
+			k2, v2 := fn(k, v)
+			result.Set(k2, v2)
+		}
+		return result
+	default:
+		// 默认情况，返回原map的拷贝
+		result := NewGenericMap[K, V]()
+		for k, v := range m.data {
+			result.Set(k, v)
+		}
+		return result
+	}
+}
+
+// Filter 过滤Map，返回符合条件的键值对组成的新Map
+func (m *GenericMap[K, V]) Filter(predicate func(K, V) bool) *GenericMap[K, V] {
+	result := NewGenericMap[K, V]()
+	for k, v := range m.data {
+		if predicate(k, v) {
+			result.Set(k, v)
+		}
+	}
+	return result
+}
+
+// ForEach 对每个键值对执行操作
+func (m *GenericMap[K, V]) ForEach(action func(K, V)) {
+	for k, v := range m.data {
+		action(k, v)
+	}
+}
+
+// Merge 合并两个Map，如果有重复键，后者会覆盖前者
+func (m *GenericMap[K, V]) Merge(other *GenericMap[K, V]) *GenericMap[K, V] {
+	result := NewGenericMap[K, V]()
+
+	// 复制第一个map
+	for k, v := range m.data {
+		result.Set(k, v)
+	}
+
+	// 添加或覆盖第二个map的内容
+	for k, v := range other.data {
+		result.Set(k, v)
+	}
+
+	return result
+}
+
+// Clear 清空Map
+func (m *GenericMap[K, V]) Clear() {
+	m.data = make(map[K]V)
 }
 
 // ================== 线程安全Map ==================
@@ -190,23 +273,40 @@ func (m *LinkedMap[K, V]) Len() int {
 // ================== TreeMap（有序Map，基于红黑树） ==================
 
 // TreeMap 有序Map，适合需要排序的场景
-type TreeMap[K constraints.Ordered, V any] struct {
+type TreeMap[K interface {
+	constraints.Ordered
+	comparable
+}, V any] struct {
 	data map[K]V
 	keys []K
 }
 
 // NewTreeMap 创建TreeMap
-func NewTreeMap[K constraints.Ordered, V any]() *TreeMap[K, V] {
-	return &TreeMap[K, V]{data: make(map[K]V)}
+func NewTreeMap[K interface {
+	constraints.Ordered
+	comparable
+}, V any]() *TreeMap[K, V] {
+	return &TreeMap[K, V]{
+		data: make(map[K]V),
+		keys: make([]K, 0),
+	}
 }
 
 // Set 插入或更新键值对
 func (m *TreeMap[K, V]) Set(key K, value V) {
 	if _, ok := m.data[key]; !ok {
+		// 新键，需要插入到keys切片并保持有序
 		m.keys = append(m.keys, key)
+		m.sortKeys()
 	}
 	m.data[key] = value
-	// 这里可根据需要排序m.keys
+}
+
+// sortKeys 对keys进行排序
+func (m *TreeMap[K, V]) sortKeys() {
+	sort.Slice(m.keys, func(i, j int) bool {
+		return m.keys[i] < m.keys[j]
+	})
 }
 
 // Get 获取键对应的值
@@ -218,13 +318,27 @@ func (m *TreeMap[K, V]) Get(key K) (V, bool) {
 // Delete 删除键
 func (m *TreeMap[K, V]) Delete(key K) {
 	delete(m.data, key)
-	// 这里可同步删除m.keys中的key
+	// 从keys中删除key
+	for i, k := range m.keys {
+		if k == key {
+			m.keys = append(m.keys[:i], m.keys[i+1:]...)
+			break
+		}
+	}
 }
 
 // Keys 返回有序的所有键
 func (m *TreeMap[K, V]) Keys() []K {
-	// 这里可返回排序后的keys
-	return m.keys
+	// 返回已排序的keys
+	result := make([]K, len(m.keys))
+	copy(result, m.keys)
+	return result
+}
+
+// Clear 清空TreeMap
+func (m *TreeMap[K, V]) Clear() {
+	m.data = make(map[K]V)
+	m.keys = make([]K, 0)
 }
 
 // Len 返回元素数量
@@ -254,21 +368,68 @@ func (m *MultiMap[K, V]) Get(key K) []V {
 	return m.data[key]
 }
 
-// Delete 删除key
+// Delete 删除key及其所有值
 func (m *MultiMap[K, V]) Delete(key K) {
 	delete(m.data, key)
 }
 
-// Keys 返回所有键
+// RemoveValue 从指定键中删除特定值，如果找到并删除则返回true
+func (m *MultiMap[K, V]) RemoveValue(key K, value V) bool {
+	values, ok := m.data[key]
+	if !ok {
+		return false
+	}
+
+	for i, v := range values {
+		// 这里使用反射进行值比较，实际应用中可能需要自定义相等性比较函数
+		if interface{}(v) == interface{}(value) {
+			// 删除该元素
+			m.data[key] = append(values[:i], values[i+1:]...)
+			return true
+		}
+	}
+	return false
+}
+
+// AllValues 返回所有键的所有值的平铺列表
+func (m *MultiMap[K, V]) AllValues() []V {
+	var result []V
+	for _, values := range m.data {
+		result = append(result, values...)
+	}
+	return result
+}
+
+// Contains 检查键是否包含特定值
+func (m *MultiMap[K, V]) Contains(key K, value V) bool {
+	values, ok := m.data[key]
+	if !ok {
+		return false
+	}
+
+	for _, v := range values {
+		if interface{}(v) == interface{}(value) {
+			return true
+		}
+	}
+	return false
+}
+
+// Clear 清空MultiMap
+func (m *MultiMap[K, V]) Clear() {
+	m.data = make(map[K][]V)
+}
+
+// Keys 返回所有有值的键
 func (m *MultiMap[K, V]) Keys() []K {
-	keys := make([]K, 0, len(m.data))
+	var keys []K
 	for k := range m.data {
 		keys = append(keys, k)
 	}
 	return keys
 }
 
-// Len 返回key数量
+// Len 返回不同键的数量
 func (m *MultiMap[K, V]) Len() int {
 	return len(m.data)
 }
