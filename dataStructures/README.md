@@ -30,7 +30,7 @@ GGU DataStructures 是一个基于 Go 泛型的高性能数据结构库，提供
 ### 安装
 
 ```bash
-go get github.com/noobtrump/go-generic-utils
+go get github.com/Humphrey-He/go-generic-utils
 ```
 
 ### 基础用法
@@ -41,11 +41,11 @@ package main
 import (
 	"fmt"
 	
-	"github.com/noobtrump/go-generic-utils/dataStructures/set"
-	"github.com/noobtrump/go-generic-utils/dataStructures/list"
-	"github.com/noobtrump/go-generic-utils/dataStructures/queue"
-	"github.com/noobtrump/go-generic-utils/dataStructures/tuple"
-	"github.com/noobtrump/go-generic-utils/dataStructures/maputils"
+	"github.com/Humphrey-He/go-generic-utils/dataStructures/set"
+	"github.com/Humphrey-He/go-generic-utils/dataStructures/list"
+	"github.com/Humphrey-He/go-generic-utils/dataStructures/queue"
+	"github.com/Humphrey-He/go-generic-utils/dataStructures/tuple"
+	"github.com/Humphrey-He/go-generic-utils/dataStructures/maputils"
 )
 
 func main() {

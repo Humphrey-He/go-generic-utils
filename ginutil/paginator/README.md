@@ -143,7 +143,7 @@ func GetUserListWithCursor(c *gin.Context) {
       "id": 11,
       "name": "User 11",
       "email": "user11@example.com",
-      "createdAt": "2023-06-01T10:00:00Z"
+      "createdAt": "2024-06-01T10:00:00Z"
     },
     // ...更多数据项
   ],
@@ -166,7 +166,7 @@ func GetUserListWithCursor(c *gin.Context) {
       "id": 11,
       "name": "User 11",
       "email": "user11@example.com",
-      "createdAt": "2023-06-01T10:00:00Z"
+      "createdAt": "2024-06-01T10:00:00Z"
     },
     // ...更多数据项
   ],

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/noobtrump/go-generic-utils/ginutil/render"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/render"
 
 	"github.com/gin-gonic/gin"
 )
@@ -57,7 +57,7 @@ func ExampleSuccess() {
 	//     "email": "admin@example.com"
 	//   },
 	//   "trace_id": "",
-	//   "server_time": "2023-09-01T12:00:00Z"
+	//   "server_time": "2024-09-01T12:00:00Z"
 	// }
 }
 
@@ -78,7 +78,7 @@ func ExampleError() {
 	//   "message": "用户不存在",
 	//   "data": {},
 	//   "trace_id": "",
-	//   "server_time": "2023-09-01T12:00:00Z"
+	//   "server_time": "2024-09-01T12:00:00Z"
 	// }
 }
 
@@ -116,7 +116,7 @@ func ExamplePaginated() {
 	//     "has_prev": false
 	//   },
 	//   "trace_id": "",
-	//   "server_time": "2023-09-01T12:00:00Z"
+	//   "server_time": "2024-09-01T12:00:00Z"
 	// }
 }
 
@@ -148,7 +148,7 @@ func ExampleSuccessXML() {
 	//     <email>admin@example.com</email>
 	//   </data>
 	//   <trace_id></trace_id>
-	//   <server_time>2023-09-01T12:00:00Z</server_time>
+	//   <server_time>2024-09-01T12:00:00Z</server_time>
 	// </StandardResponse>
 }
 

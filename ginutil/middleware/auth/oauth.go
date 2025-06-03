@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/noobtrump/go-generic-utils/ginutil/ecode"
-	"github.com/noobtrump/go-generic-utils/ginutil/response"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/ecode"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/response"
 
 	"github.com/gin-gonic/gin"
 )

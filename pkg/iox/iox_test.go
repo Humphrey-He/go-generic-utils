@@ -1,4 +1,4 @@
-// Copyright 2024 ecodeclub
+// Copyright 2024 Humphrey-He
 //
 // 本文件为 iox.go 的测试用例，覆盖多段字节流、并发安全多段字节流、JSON流读取等主要功能，符合Go测试规范。
 

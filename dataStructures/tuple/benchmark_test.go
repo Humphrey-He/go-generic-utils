@@ -15,8 +15,10 @@
 package tuple
 
 import (
+	"fmt"
 	"strconv"
 	"testing"
+	"time"
 )
 
 // 准备基准测试数据
@@ -342,4 +344,166 @@ func BenchmarkCartItemOperations(b *testing.B) {
 			}
 		})
 	}
+}
+
+// 基准测试: 购物车相关操作
+func BenchmarkCartOperations(b *testing.B) {
+	// 准备测试数据
+	items := make(CartItemList, 100)
+	for i := 0; i < 100; i++ {
+		items[i] = NewCartItem(fmt.Sprintf("product-%d", i), i+1, float64(i*10)+0.99)
+		// 使一半的商品被选中
+		if i%2 == 0 {
+			items[i].Selected = false
+		}
+	}
+
+	b.Run("CartItem.TotalPrice", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			for _, item := range items {
+				_ = item.TotalPrice()
+			}
+		}
+	})
+
+	b.Run("CartItemList.TotalQuantity", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			_ = items.TotalQuantity()
+		}
+	})
+
+	b.Run("CartItemList.TotalAmount", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			_ = items.TotalAmount()
+		}
+	})
+
+	b.Run("CartItemList.FilterSelected", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			_ = items.FilterSelected()
+		}
+	})
+}
+
+// 基准测试: 时间值列表操作
+func BenchmarkTimeValueOperations(b *testing.B) {
+	// 准备测试数据
+	now := time.Now()
+	values := make(TimeValueList, 100)
+	for i := 0; i < 100; i++ {
+		values[i] = NewTimeValuePair(now.Add(time.Duration(-i)*time.Hour), float64(i))
+	}
+
+	b.Run("TimeValueList.SortByTime", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			valuesCopy := make(TimeValueList, len(values))
+			copy(valuesCopy, values)
+			valuesCopy.SortByTime()
+		}
+	})
+
+	b.Run("TimeValueList.AverageValue", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			_ = values.AverageValue()
+		}
+	})
+
+	b.Run("TimeValueList.FilterByTimeRange", func(b *testing.B) {
+		start := now.Add(-50 * time.Hour)
+		end := now.Add(-10 * time.Hour)
+		for i := 0; i < b.N; i++ {
+			_ = values.FilterByTimeRange(start, end)
+		}
+	})
+
+	b.Run("TimeValueList.GroupByDay", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			_ = values.GroupByDay()
+		}
+	})
+}
+
+// 基准测试: 产品分类操作
+func BenchmarkProductCategoryOperations(b *testing.B) {
+	// 准备测试数据
+	categories := make(ProductCategoryList, 100)
+	for i := 0; i < 100; i++ {
+		catIndex := i % 5
+		subCatIndex := i % 10
+		categories[i] = NewProductCategory(
+			fmt.Sprintf("P%03d", i),
+			fmt.Sprintf("Category-%d", catIndex),
+			fmt.Sprintf("SubCategory-%d", subCatIndex),
+		)
+	}
+
+	b.Run("ProductCategoryList.FilterByCategory", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			_ = categories.FilterByCategory("Category-1")
+		}
+	})
+
+	b.Run("ProductCategoryList.FilterBySubCategory", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			_ = categories.FilterBySubCategory("SubCategory-5")
+		}
+	})
+
+	b.Run("ProductCategoryList.CountByCategory", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			_ = categories.CountByCategory()
+		}
+	})
+}
+
+// 基准测试: 订单列表操作
+func BenchmarkUserOrderOperations(b *testing.B) {
+	// 准备测试数据
+	now := time.Now()
+	orders := make(UserOrderList, 100)
+	for i := 0; i < 100; i++ {
+		userID := fmt.Sprintf("U%03d", i%10)
+		orderID := fmt.Sprintf("ORD%03d", i)
+		amount := float64(i*10) + 0.99
+		orders[i] = NewUserOrder(userID, orderID, amount)
+		orders[i].OrderTime = now.Add(time.Duration(-i) * time.Hour)
+
+		// 设置不同状态
+		switch i % 4 {
+		case 0:
+			orders[i].Status = "待支付"
+		case 1:
+			orders[i].Status = "已支付"
+		case 2:
+			orders[i].Status = "已发货"
+		case 3:
+			orders[i].Status = "已完成"
+		}
+	}
+
+	b.Run("UserOrderList.FilterByUser", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			_ = orders.FilterByUser("U001")
+		}
+	})
+
+	b.Run("UserOrderList.FilterByStatus", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			_ = orders.FilterByStatus("已支付")
+		}
+	})
+
+	b.Run("UserOrderList.SortByTime", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			ordersCopy := make(UserOrderList, len(orders))
+			copy(ordersCopy, orders)
+			ordersCopy.SortByTime()
+		}
+	})
+
+	b.Run("UserOrderList.SumAmount", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			_ = orders.SumAmount()
+		}
+	})
 }

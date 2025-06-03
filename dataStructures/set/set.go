@@ -341,7 +341,7 @@ func (s *ConcurrentSet[T]) Clear() {
 	s.set.Clear()
 }
 
-// ForEach 遍历集合中的每个元素（线程安全）
+// ForEach 遍历集合中的每个元素
 func (s *ConcurrentSet[T]) ForEach(fn func(key T) (cont bool)) {
 	// 先复制一份数据再遍历，避免长时间持有锁
 	keys := s.Keys()

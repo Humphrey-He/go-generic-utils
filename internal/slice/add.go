@@ -1,6 +1,6 @@
 package slice
 
-import "github.com/noobtrump/go-generic-utils/internal/errs"
+import "github.com/Humphrey-He/go-generic-utils/internal/errs"
 
 func Add[T any](src []T, element T, index int) ([]T, error) {
 	length := len(src)

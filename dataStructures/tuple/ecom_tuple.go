@@ -54,8 +54,16 @@ func (ppl ProductPriceList) SortByPriceDesc() {
 func (ppl ProductPriceList) FilterByPriceRange(min, max float64) ProductPriceList {
 	result := make(ProductPriceList, 0)
 	for _, pp := range ppl {
-		if pp.Price >= min && (max <= 0 || pp.Price <= max) {
-			result = append(result, pp)
+		// 当max <= 0时只考虑最小价格条件
+		if max <= 0 {
+			if pp.Price >= min {
+				result = append(result, pp)
+			}
+		} else {
+			// 同时考虑最小和最大价格条件
+			if pp.Price >= min && pp.Price <= max {
+				result = append(result, pp)
+			}
 		}
 	}
 	return result
@@ -210,10 +218,10 @@ func (uol UserOrderList) FilterByStatus(status string) UserOrderList {
 	return result
 }
 
-// SortByTime 按时间排序
+// SortByTime 按订单时间排序（降序，最新的排在前面）
 func (uol UserOrderList) SortByTime() {
 	sort.Slice(uol, func(i, j int) bool {
-		return uol[i].OrderTime.Before(uol[j].OrderTime)
+		return uol[i].OrderTime.After(uol[j].OrderTime)
 	})
 }
 
@@ -396,7 +404,7 @@ func NewCartItem(productID string, quantity int, price float64) CartItem {
 
 // String 返回CartItem的字符串表示
 func (ci CartItem) String() string {
-	return fmt.Sprintf("商品 %s: %d件 x $%.2f", ci.ProductID, ci.Quantity, ci.Price)
+	return fmt.Sprintf("商品 %s: %d件, 单价 $%.2f", ci.ProductID, ci.Quantity, ci.Price)
 }
 
 // TotalPrice 计算总价
@@ -412,24 +420,20 @@ func (ci CartItem) AsPair() Pair[string, int] {
 // CartItemList 购物车项目列表
 type CartItemList []CartItem
 
-// TotalQuantity 计算总数量
+// TotalQuantity 计算购物车中所有商品的总数量
 func (cil CartItemList) TotalQuantity() int {
 	var total int
-	for _, ci := range cil {
-		if ci.Selected {
-			total += ci.Quantity
-		}
+	for _, item := range cil {
+		total += item.Quantity
 	}
 	return total
 }
 
-// TotalAmount 计算总金额
+// TotalAmount 计算购物车中所有商品的总金额
 func (cil CartItemList) TotalAmount() float64 {
 	var total float64
-	for _, ci := range cil {
-		if ci.Selected {
-			total += ci.TotalPrice()
-		}
+	for _, item := range cil {
+		total += item.TotalPrice()
 	}
 	return total
 }
@@ -486,10 +490,10 @@ func (tvp TimeValuePair) AsPair() Pair[time.Time, float64] {
 // TimeValueList 时间-数值列表
 type TimeValueList []TimeValuePair
 
-// SortByTime 按时间排序
+// SortByTime 按时间排序（降序，最新的排在前面）
 func (tvl TimeValueList) SortByTime() {
 	sort.Slice(tvl, func(i, j int) bool {
-		return tvl[i].Time.Before(tvl[j].Time)
+		return tvl[i].Time.After(tvl[j].Time)
 	})
 }
 
@@ -533,14 +537,18 @@ func (tvl TimeValueList) GroupByDay() map[string]TimeValueList {
 
 // DailyTotal 计算每日总量
 func (tvl TimeValueList) DailyTotal() []Pair[string, float64] {
-	groups := tvl.GroupByDay()
-	result := make([]Pair[string, float64], 0, len(groups))
+	// 使用map来聚合每天的数据
+	dailyTotals := make(map[string]float64)
 
-	for day, values := range groups {
-		total := 0.0
-		for _, v := range values {
-			total += v.Value
-		}
+	// 一次遍历，计算每天的总和
+	for _, tv := range tvl {
+		day := tv.Time.Format("2006-01-02")
+		dailyTotals[day] += tv.Value
+	}
+
+	// 转换为Pair数组
+	result := make([]Pair[string, float64], 0, len(dailyTotals))
+	for day, total := range dailyTotals {
 		result = append(result, NewPair(day, total))
 	}
 

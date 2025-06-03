@@ -1,4 +1,4 @@
-// Copyright 2024 ecodeclub
+// Copyright 2024 Humphrey-He
 //
 // 本文件为 retry.go 的测试用例，覆盖固定间隔、指数退避、自适应、线程安全包装器等策略，符合Go测试规范。
 

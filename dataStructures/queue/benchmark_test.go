@@ -224,7 +224,7 @@ func BenchmarkDelayQueue_EnqueueWithDelay(b *testing.B) {
 				for j := 0; j < size; j++ {
 					delay := time.Duration(delayMs) * time.Millisecond
 					expireAt := time.Now().Add(delay)
-					_ = queue.Enqueue(j, expireAt)
+					_ = queue.EnqueueWithDelay(j, expireAt)
 				}
 			}
 		})

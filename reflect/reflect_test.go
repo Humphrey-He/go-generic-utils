@@ -1,4 +1,4 @@
-// Copyright 2024 ecodeclub
+// Copyright 2024 Humphrey-He
 //
 // 本文件为 reflect.go 的测试用例，覆盖常用反射工具API，符合Go测试规范。
 

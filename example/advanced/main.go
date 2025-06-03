@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/noobtrump/go-generic-utils/ginutil/render"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/render"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"

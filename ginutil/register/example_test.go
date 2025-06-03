@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/noobtrump/go-generic-utils/ginutil/register"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/register"
 
 	"github.com/gin-gonic/gin"
 )

@@ -1,4 +1,4 @@
-// Copyright 2024 ecodeclub
+// Copyright 2024 Humphrey-He
 //
 // 本文件为 iox.go 的示例文件，演示多段字节流、并发安全多段字节流、JSON流读取等常用用法。
 

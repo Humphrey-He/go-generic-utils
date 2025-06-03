@@ -4,8 +4,8 @@
 
 # Find all Go files in the project
 find . -name "*.go" -type f | while read -r file; do
-  # Replace ecodeclub copyright with Humphrey
-  sed -i 's|// Copyright [0-9]\{4\} ecodeclub|// Copyright 2024 Humphrey|g' "$file"
+  # Replace Humphrey-He copyright with Humphrey
+  sed -i 's|// Copyright [0-9]\{4\} Humphrey-He|// Copyright 2024 Humphrey|g' "$file"
   
   # Check if file has license header
   if ! grep -q "Licensed under the Apache License" "$file"; then

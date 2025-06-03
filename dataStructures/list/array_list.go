@@ -1,4 +1,4 @@
-// Copyright 2023 ecodeclub
+// Copyright 2024 Humphrey-He
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ func NewArrayListOf[T any](ts []T) *ArrayList[T] {
 func (a *ArrayList[T]) Get(index int) (t T, e error) {
 	l := a.Len()
 	if index < 0 || index >= l {
-		return t, ErrIndexOutOfRange
+		return t, NewIndexOutOfRangeError(l, index)
 	}
 	return a.vals[index], e
 }
@@ -61,7 +61,7 @@ func (a *ArrayList[T]) Append(ts ...T) error {
 func (a *ArrayList[T]) Add(index int, t T) error {
 	l := a.Len()
 	if index < 0 || index > l {
-		return ErrIndexOutOfRange
+		return NewIndexOutOfRangeError(l, index)
 	}
 
 	if index == l {
@@ -81,7 +81,7 @@ func (a *ArrayList[T]) Add(index int, t T) error {
 func (a *ArrayList[T]) Set(index int, t T) error {
 	length := len(a.vals)
 	if index >= length || index < 0 {
-		return ErrIndexOutOfRange
+		return NewIndexOutOfRangeError(length, index)
 	}
 	a.vals[index] = t
 	return nil
@@ -97,7 +97,7 @@ func (a *ArrayList[T]) Delete(index int) (T, error) {
 	length := len(a.vals)
 
 	if index < 0 || index >= length {
-		return t, ErrIndexOutOfRange
+		return t, NewIndexOutOfRangeError(length, index)
 	}
 
 	// 保存要删除的元素

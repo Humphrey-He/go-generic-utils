@@ -3,7 +3,7 @@
 
 SHELL := /bin/bash
 GO := go
-MODULE := github.com/noobtrump/go-generic-utils
+MODULE := github.com/Humphrey-He/go-generic-utils
 VERSION := $(shell git describe --tags --always --dirty 2>/dev/null || echo "v0.0.1")
 
 # Directories

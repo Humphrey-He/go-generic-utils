@@ -1,4 +1,4 @@
-// Copyright 2023 ecodeclub
+// Copyright 2024 Humphrey-He
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -44,10 +44,17 @@ func NewConcurrentLinkedList[T any]() *ConcurrentList[T] {
 	}
 }
 
-// Get 线程安全地获取指定索引的元素
+// Get 返回对应下标的元素
 func (c *ConcurrentList[T]) Get(index int) (T, error) {
 	c.lock.RLock()
 	defer c.lock.RUnlock()
+
+	l := c.Len()
+	if index < 0 || index >= l {
+		var t T
+		return t, NewIndexOutOfRangeError(l, index)
+	}
+
 	return c.List.Get(index)
 }
 
@@ -58,24 +65,43 @@ func (c *ConcurrentList[T]) Append(ts ...T) error {
 	return c.List.Append(ts...)
 }
 
-// Add 线程安全地在指定位置添加元素
+// Add 在特定下标处增加一个新元素
 func (c *ConcurrentList[T]) Add(index int, t T) error {
 	c.lock.Lock()
 	defer c.lock.Unlock()
+
+	l := c.Len()
+	if index < 0 || index > l {
+		return NewIndexOutOfRangeError(l, index)
+	}
+
 	return c.List.Add(index, t)
 }
 
-// Set 线程安全地设置指定位置的元素
+// Set 重置 index 位置的值
 func (c *ConcurrentList[T]) Set(index int, t T) error {
 	c.lock.Lock()
 	defer c.lock.Unlock()
+
+	l := c.Len()
+	if index < 0 || index >= l {
+		return NewIndexOutOfRangeError(l, index)
+	}
+
 	return c.List.Set(index, t)
 }
 
-// Delete 线程安全地删除指定位置的元素
+// Delete 删除目标元素的位置，并且返回该位置的值
 func (c *ConcurrentList[T]) Delete(index int) (T, error) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
+
+	l := c.Len()
+	if index < 0 || index >= l {
+		var t T
+		return t, NewIndexOutOfRangeError(l, index)
+	}
+
 	return c.List.Delete(index)
 }
 

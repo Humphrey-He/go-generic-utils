@@ -178,6 +178,52 @@ func TestConcurrentArrayBlockingQueue(t *testing.T) {
 			t.Errorf("并发操作后取出元素的总和不匹配, 期望 %d, 实际 %d", expectedSum, sum)
 		}
 	})
+
+	t.Run("Peek操作", func(t *testing.T) {
+		// 先清空队列
+		for !q.IsEmpty() {
+			_, _ = q.Dequeue()
+		}
+
+		// 队列为空时Peek应返回错误
+		_, err := q.Peek()
+		if err == nil {
+			t.Error("队列为空时Peek应返回错误")
+		}
+
+		// 入队元素
+		q.Enqueue(42)
+		q.Enqueue(43)
+
+		// Peek应返回队首元素，但不移除它
+		val, err := q.Peek()
+		if err != nil {
+			t.Errorf("Peek操作失败: %v", err)
+		}
+		if val != 42 {
+			t.Errorf("Peek应返回42，实际返回%d", val)
+		}
+
+		// 再次Peek，应返回相同元素
+		val, err = q.Peek()
+		if err != nil {
+			t.Errorf("第二次Peek操作失败: %v", err)
+		}
+		if val != 42 {
+			t.Errorf("第二次Peek应返回42，实际返回%d", val)
+		}
+
+		// 队列长度应保持不变
+		if q.Len() != 2 {
+			t.Errorf("Peek后队列长度应为2，实际为%d", q.Len())
+		}
+
+		// Dequeue应返回Peek查看的同一元素
+		val, _ = q.Dequeue()
+		if val != 42 {
+			t.Errorf("Dequeue应返回42，实际返回%d", val)
+		}
+	})
 }
 
 // TestConcurrentLinkedBlockingQueue 对并发安全链表阻塞队列进行测试。
@@ -296,6 +342,52 @@ func TestConcurrentLinkedBlockingQueue(t *testing.T) {
 			t.Errorf("并发操作后取出的元素不匹配或丢失")
 		}
 	})
+
+	t.Run("Peek操作", func(t *testing.T) {
+		// 先清空队列
+		for !q.IsEmpty() {
+			_, _ = q.Dequeue()
+		}
+
+		// 队列为空时Peek应返回错误
+		_, err := q.Peek()
+		if err == nil {
+			t.Error("队列为空时Peek应返回错误")
+		}
+
+		// 入队元素
+		q.Enqueue("first")
+		q.Enqueue("second")
+
+		// Peek应返回队首元素，但不移除它
+		val, err := q.Peek()
+		if err != nil {
+			t.Errorf("Peek操作失败: %v", err)
+		}
+		if val != "first" {
+			t.Errorf("Peek应返回'first'，实际返回'%s'", val)
+		}
+
+		// 再次Peek，应返回相同元素
+		val, err = q.Peek()
+		if err != nil {
+			t.Errorf("第二次Peek操作失败: %v", err)
+		}
+		if val != "first" {
+			t.Errorf("第二次Peek应返回'first'，实际返回'%s'", val)
+		}
+
+		// 队列长度应保持不变
+		if q.Len() != 2 {
+			t.Errorf("Peek后队列长度应为2，实际为%d", q.Len())
+		}
+
+		// Dequeue应返回Peek查看的同一元素
+		val, _ = q.Dequeue()
+		if val != "first" {
+			t.Errorf("Dequeue应返回'first'，实际返回'%s'", val)
+		}
+	})
 }
 
 // TestConcurrentPriorityQueue 对并发安全优先级队列进行测试。
@@ -308,6 +400,30 @@ func TestConcurrentPriorityQueue(t *testing.T) {
 		}
 		if !q.IsEmpty() {
 			t.Error("新队列应为空")
+		}
+	})
+
+	t.Run("验证Queue接口实现", func(t *testing.T) {
+		// 验证ConcurrentPriorityQueue是否实现了Queue接口
+		var queue Queue[string] = q
+
+		// 使用Enqueue方法（应该使用默认优先级）
+		err := queue.Enqueue("test_item")
+		if err != nil {
+			t.Errorf("Enqueue操作失败: %v", err)
+		}
+
+		if q.Len() != 1 {
+			t.Errorf("入队一个元素后长度应为 1, 实际为 %d", q.Len())
+		}
+
+		// 使用Dequeue方法
+		val, err := queue.Dequeue()
+		if err != nil {
+			t.Errorf("Dequeue操作失败: %v", err)
+		}
+		if val != "test_item" {
+			t.Errorf("Dequeue() 期望 'test_item', 实际 '%s'", val)
 		}
 	})
 
@@ -436,6 +552,57 @@ func TestConcurrentPriorityQueue(t *testing.T) {
 			}
 		}
 	})
+
+	t.Run("Peek操作", func(t *testing.T) {
+		// 创建新队列以避免影响其他测试
+		pq := NewConcurrentPriorityQueue[string]()
+
+		// 队列为空时Peek应返回错误
+		_, err := pq.Peek()
+		if err == nil {
+			t.Error("队列为空时Peek应返回错误")
+		}
+
+		// 添加不同优先级的元素
+		pq.EnqueueWithPriority("low", 1)
+		pq.EnqueueWithPriority("high", 10)
+		pq.EnqueueWithPriority("medium", 5)
+
+		// Peek应返回优先级最高的元素
+		val, err := pq.Peek()
+		if err != nil {
+			t.Errorf("Peek操作失败: %v", err)
+		}
+		if val != "high" {
+			t.Errorf("Peek应返回'high'，实际返回'%s'", val)
+		}
+
+		// 再次Peek，应返回相同元素
+		val, err = pq.Peek()
+		if err != nil {
+			t.Errorf("第二次Peek操作失败: %v", err)
+		}
+		if val != "high" {
+			t.Errorf("第二次Peek应返回'high'，实际返回'%s'", val)
+		}
+
+		// 队列长度应保持不变
+		if pq.Len() != 3 {
+			t.Errorf("Peek后队列长度应为3，实际为%d", pq.Len())
+		}
+
+		// Dequeue应返回Peek查看的同一元素
+		val, _ = pq.Dequeue()
+		if val != "high" {
+			t.Errorf("Dequeue应返回'high'，实际返回'%s'", val)
+		}
+
+		// 此时peek应返回下一个优先级最高的元素
+		val, _ = pq.Peek()
+		if val != "medium" {
+			t.Errorf("移除一个元素后Peek应返回'medium'，实际返回'%s'", val)
+		}
+	})
 }
 
 // TestDelayQueue 对并发安全延迟队列进行测试。
@@ -451,10 +618,41 @@ func TestDelayQueue(t *testing.T) {
 		}
 	})
 
+	t.Run("验证Queue接口实现", func(t *testing.T) {
+		// 验证DelayQueue是否实现了Queue接口
+		var queue Queue[string] = q
+
+		// 使用Enqueue方法（应该使用默认延迟）
+		err := queue.Enqueue("test_item")
+		if err != nil {
+			t.Errorf("Enqueue操作失败: %v", err)
+		}
+
+		if q.Len() != 1 {
+			t.Errorf("入队一个元素后长度应为 1, 实际为 %d", q.Len())
+		}
+
+		// 使用Dequeue方法（默认延迟应该很短）
+		startTime := time.Now()
+		val, err := queue.Dequeue()
+		duration := time.Since(startTime)
+
+		if err != nil {
+			t.Errorf("Dequeue操作失败: %v", err)
+		}
+		if val != "test_item" {
+			t.Errorf("Dequeue() 期望 'test_item', 实际 '%s'", val)
+		}
+		// 默认延迟应该很短，但还是会有一些延迟
+		if duration > 100*time.Millisecond {
+			t.Errorf("默认延迟出队时间过长: %v", duration)
+		}
+	})
+
 	t.Run("基本延迟入队和出队", func(t *testing.T) {
 		now := time.Now()
-		q.Enqueue("item1_later", now.Add(200*time.Millisecond)) // 200ms后到期
-		q.Enqueue("item0_sooner", now.Add(50*time.Millisecond)) // 50ms后到期 (应先出队)
+		q.EnqueueWithDelay("item1_later", now.Add(200*time.Millisecond)) // 200ms后到期
+		q.EnqueueWithDelay("item0_sooner", now.Add(50*time.Millisecond)) // 50ms后到期 (应先出队)
 
 		if q.Len() != 2 {
 			t.Errorf("入队两个元素后长度应为 2, 实际为 %d", q.Len())
@@ -508,7 +706,7 @@ func TestDelayQueue(t *testing.T) {
 		}
 
 		// 入队一个元素后，Dequeue 仍然可能阻塞，直到该元素到期
-		qEmpty.Enqueue(1, time.Now().Add(200*time.Millisecond))
+		qEmpty.EnqueueWithDelay(1, time.Now().Add(200*time.Millisecond))
 
 		select {
 		case <-dequeueDone: // 如果元素立即到期（不太可能），或者逻辑有误
@@ -541,7 +739,7 @@ func TestDelayQueue(t *testing.T) {
 			wg.Add(1)
 			go func(val int, delay time.Duration) {
 				defer wg.Done()
-				qConc.Enqueue(val, startTime.Add(delay)) // 使用 startTime + delay 作为到期时间
+				qConc.EnqueueWithDelay(val, startTime.Add(delay)) // 使用 startTime + delay 作为到期时间
 			}(i, delays[i])
 		}
 
@@ -566,6 +764,60 @@ func TestDelayQueue(t *testing.T) {
 		expectedOrder := []int{3, 1, 4, 0, 2}
 		if !reflect.DeepEqual(results, expectedOrder) {
 			t.Errorf("并发延迟操作后出队顺序不正确。期望: %v, 实际: %v", expectedOrder, results)
+		}
+	})
+
+	t.Run("Peek操作", func(t *testing.T) {
+		// 创建新队列以避免影响其他测试
+		dq := NewDelayQueue[string]()
+
+		// 队列为空时Peek应返回错误
+		_, err := dq.Peek()
+		if err == nil {
+			t.Error("队列为空时Peek应返回错误")
+		}
+
+		now := time.Now()
+		// 添加不同延迟的元素
+		dq.EnqueueWithDelay("later", now.Add(200*time.Millisecond))
+		dq.EnqueueWithDelay("sooner", now.Add(50*time.Millisecond))
+
+		// Peek应返回最早到期的元素（不会阻塞）
+		val, err := dq.Peek()
+		if err != nil {
+			t.Errorf("Peek操作失败: %v", err)
+		}
+		if val != "sooner" {
+			t.Errorf("Peek应返回'sooner'，实际返回'%s'", val)
+		}
+
+		// 再次Peek，应返回相同元素
+		val, err = dq.Peek()
+		if err != nil {
+			t.Errorf("第二次Peek操作失败: %v", err)
+		}
+		if val != "sooner" {
+			t.Errorf("第二次Peek应返回'sooner'，实际返回'%s'", val)
+		}
+
+		// 队列长度应保持不变
+		if dq.Len() != 2 {
+			t.Errorf("Peek后队列长度应为2，实际为%d", dq.Len())
+		}
+
+		// Dequeue会阻塞直到元素到期，所以这里等待一下
+		time.Sleep(60 * time.Millisecond) // 等待"sooner"到期
+
+		// Dequeue应返回Peek查看的同一元素
+		val, _ = dq.Dequeue()
+		if val != "sooner" {
+			t.Errorf("Dequeue应返回'sooner'，实际返回'%s'", val)
+		}
+
+		// 此时peek应返回下一个到期最早的元素
+		val, _ = dq.Peek()
+		if val != "later" {
+			t.Errorf("移除一个元素后Peek应返回'later'，实际返回'%s'", val)
 		}
 	})
 }

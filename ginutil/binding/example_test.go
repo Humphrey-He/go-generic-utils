@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"strings"
 
-	"github.com/noobtrump/go-generic-utils/ginutil/binding"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/binding"
 
 	"github.com/gin-gonic/gin"
 )
@@ -71,7 +71,7 @@ func Example_bindJSON() {
 	// Valid request status: 200
 	// Valid request body: {"message":"Welcome, johndoe!"}
 	// Invalid request status: 400
-	// Invalid request body: {"errors":[{"field":"Username","tag":"min","message":"Value must be greater than or equal to 3"},{"field":"Password","tag":"min","message":"Value must be greater than or equal to 8"}]}
+	// Invalid request body: {"errors":[{"field":"Username","tag":"min","message":"Value must be greater than or equal to 3","value":"jo"},{"field":"Password","tag":"min","message":"Value must be greater than or equal to 8","value":"pass"}]}
 }
 
 // This example demonstrates how to use the binding package to bind and validate query parameters
@@ -135,5 +135,5 @@ func Example_bindQuery() {
 	// Valid request status: 200
 	// Valid request body: {"limit":20,"offset":40,"query":"golang","results":["result1","result2","result3"]}
 	// Invalid request status: 400
-	// Invalid request body: {"errors":[{"field":"Query","tag":"required","message":"This field is required"},{"field":"Limit","tag":"max","message":"Value must be less than or equal to 100"}]}
+	// Invalid request body: {"errors":[{"field":"Query","tag":"required","message":"This field is required","value":""},{"field":"Limit","tag":"max","message":"Value must be less than or equal to 100","value":200}]}
 }

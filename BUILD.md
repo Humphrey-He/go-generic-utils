@@ -71,7 +71,7 @@ make examples
 #### Viewing Documentation
 
 ```bash
-# Generate and serve documentation at http://localhost:6060/pkg/github.com/noobtrump/go-generic-utils/
+# Generate and serve documentation at http://localhost:6060/pkg/github.com/Humphrey-He/go-generic-utils/
 make doc
 ```
 

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/noobtrump/go-generic-utils/ginutil/binding"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/binding"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"

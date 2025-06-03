@@ -34,7 +34,7 @@ GinUtil 是一个功能丰富的 Gin 框架扩展工具库，为 Gin Web 开发�
 ### 安装
 
 ```bash
-go get github.com/noobtrump/go-generic-utils/ginutil
+go get github.com/Humphrey-He/go-generic-utils/ginutil
 ```
 
 ### 基本用法
@@ -43,10 +43,10 @@ go get github.com/noobtrump/go-generic-utils/ginutil
 package main
 
 import (
-	"github.com/noobtrump/go-generic-utils/ginutil/middleware/logger"
-	"github.com/noobtrump/go-generic-utils/ginutil/middleware/recovery"
-	"github.com/noobtrump/go-generic-utils/ginutil/render"
-	"github.com/noobtrump/go-generic-utils/ginutil/register"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/middleware/logger"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/middleware/recovery"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/render"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/register"
 	"github.com/gin-gonic/gin"
 )
 
@@ -249,10 +249,10 @@ register.RegisterSwaggerWithConfig(router, config)
 package main
 
 import (
-	"github.com/noobtrump/go-generic-utils/ginutil/middleware/logger"
-	"github.com/noobtrump/go-generic-utils/ginutil/middleware/recovery"
-	"github.com/noobtrump/go-generic-utils/ginutil/render"
-	"github.com/noobtrump/go-generic-utils/ginutil/register"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/middleware/logger"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/middleware/recovery"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/render"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/register"
 	"github.com/gin-gonic/gin"
 )
 
@@ -341,8 +341,8 @@ func main() {
 package main
 
 import (
-	"github.com/noobtrump/go-generic-utils/ginutil/paginator"
-	"github.com/noobtrump/go-generic-utils/ginutil/render"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/paginator"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/render"
 	"github.com/gin-gonic/gin"
 )
 
@@ -387,9 +387,9 @@ func main() {
 package main
 
 import (
-	"github.com/noobtrump/go-generic-utils/ginutil/contextx"
-	"github.com/noobtrump/go-generic-utils/ginutil/middleware/auth"
-	"github.com/noobtrump/go-generic-utils/ginutil/render"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/contextx"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/middleware/auth"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/render"
 	"github.com/gin-gonic/gin"
 )
 

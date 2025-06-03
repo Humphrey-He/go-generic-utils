@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"strings"
 
-	"github.com/noobtrump/go-generic-utils/ginutil/middleware/recovery"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/middleware/recovery"
 
 	"github.com/gin-gonic/gin"
 )

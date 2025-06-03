@@ -75,6 +75,22 @@ func TestPair_MarshalJSON(t *testing.T) {
 	}
 }
 
+// 测试Pair的JSON反序列化
+func TestPair_UnmarshalJSON(t *testing.T) {
+	jsonStr := `{"key":"product","value":100}`
+	var p Pair[string, int]
+
+	err := json.Unmarshal([]byte(jsonStr), &p)
+	if err != nil {
+		t.Fatalf("Pair.UnmarshalJSON() 错误 = %v", err)
+	}
+
+	// 验证反序列化结果
+	if p.Key != "product" || p.Value != 100 {
+		t.Errorf("Pair.UnmarshalJSON() 结果错误, 期望 {product 100}, 得到 %v", p)
+	}
+}
+
 func TestNewPairs(t *testing.T) {
 	tests := []struct {
 		name      string
@@ -316,16 +332,32 @@ func TestTriple_Split(t *testing.T) {
 }
 
 func TestTriple_MarshalJSON(t *testing.T) {
-	triple := NewTriple("productID", "手机", 1999.99)
+	triple := NewTriple("user", 123, true)
 	data, err := json.Marshal(triple)
 	if err != nil {
 		t.Fatalf("Triple.MarshalJSON() 错误 = %v", err)
 	}
 
 	// 验证JSON格式是否正确
-	expected := `{"first":"productID","second":"手机","third":1999.99}`
+	expected := `{"first":"user","second":123,"third":true}`
 	if string(data) != expected {
 		t.Errorf("Triple.MarshalJSON() = %v, 期望 %v", string(data), expected)
+	}
+}
+
+// 测试Triple的JSON反序列化
+func TestTriple_UnmarshalJSON(t *testing.T) {
+	jsonStr := `{"first":"user","second":123,"third":true}`
+	var triple Triple[string, int, bool]
+
+	err := json.Unmarshal([]byte(jsonStr), &triple)
+	if err != nil {
+		t.Fatalf("Triple.UnmarshalJSON() 错误 = %v", err)
+	}
+
+	// 验证反序列化结果
+	if triple.First != "user" || triple.Second != 123 || triple.Third != true {
+		t.Errorf("Triple.UnmarshalJSON() 结果错误, 期望 {user 123 true}, 得到 %v", triple)
 	}
 }
 

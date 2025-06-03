@@ -3,8 +3,8 @@ package contextx_test
 import (
 	"testing"
 
-	"github.com/noobtrump/go-generic-utils/ginutil/contextx"
-	"github.com/noobtrump/go-generic-utils/ginutil/middleware/auth"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/contextx"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/middleware/auth"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"

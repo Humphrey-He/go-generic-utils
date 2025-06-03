@@ -1,4 +1,4 @@
-// Copyright 2024 ecodeclub
+// Copyright 2024 Humphrey-He
 //
 // 本文件为 pool.go 的测试用例，覆盖对象池、任务池、带超时任务池的主要功能，符合Go测试规范。
 

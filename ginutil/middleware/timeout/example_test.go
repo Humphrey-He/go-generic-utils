@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"time"
 
-	"github.com/noobtrump/go-generic-utils/ginutil/middleware/timeout"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/middleware/timeout"
 
 	"github.com/gin-gonic/gin"
 )

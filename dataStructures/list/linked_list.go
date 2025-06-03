@@ -1,4 +1,4 @@
-// Copyright 2023 ecodeclub
+// Copyright 2024 Humphrey-He
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -80,9 +80,9 @@ func (l *LinkedList[T]) findNode(index int) *node[T] {
 
 // Get 获取指定索引的元素
 func (l *LinkedList[T]) Get(index int) (T, error) {
-	if !l.checkIndex(index) {
+	if index < 0 || index >= l.Len() {
 		var zeroValue T
-		return zeroValue, ErrIndexOutOfRange
+		return zeroValue, NewIndexOutOfRangeError(l.Len(), index)
 	}
 	n := l.findNode(index)
 	return n.val, nil
@@ -107,7 +107,7 @@ func (l *LinkedList[T]) Append(ts ...T) error {
 // 当 index 等于 LinkedList 长度等同于 Append
 func (l *LinkedList[T]) Add(index int, t T) error {
 	if index < 0 || index > l.length {
-		return ErrIndexOutOfRange
+		return NewIndexOutOfRangeError(l.length, index)
 	}
 	if index == l.length {
 		return l.Append(t)
@@ -121,8 +121,8 @@ func (l *LinkedList[T]) Add(index int, t T) error {
 
 // Set 设置链表中index索引处的值为t
 func (l *LinkedList[T]) Set(index int, t T) error {
-	if !l.checkIndex(index) {
-		return ErrIndexOutOfRange
+	if index < 0 || index >= l.length {
+		return NewIndexOutOfRangeError(l.length, index)
 	}
 	node := l.findNode(index)
 	node.val = t
@@ -131,9 +131,9 @@ func (l *LinkedList[T]) Set(index int, t T) error {
 
 // Delete 删除指定位置的元素
 func (l *LinkedList[T]) Delete(index int) (T, error) {
-	if !l.checkIndex(index) {
+	if index < 0 || index >= l.length {
 		var zeroValue T
-		return zeroValue, ErrIndexOutOfRange
+		return zeroValue, NewIndexOutOfRangeError(l.length, index)
 	}
 	node := l.findNode(index)
 	node.prev.next = node.next

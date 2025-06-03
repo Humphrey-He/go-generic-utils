@@ -1,4 +1,4 @@
-// Copyright 2024 ecodeclub
+// Copyright 2024 Humphrey-He
 // sliceutils 包的测试文件。
 
 package sliceutils

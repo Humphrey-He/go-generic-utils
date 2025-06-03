@@ -13,6 +13,7 @@ import (
 type Queue[T any] interface {
 	Enqueue(val T) error // 入队
 	Dequeue() (T, error) // 出队
+	Peek() (T, error)    // 查看队首元素，不移除
 	Len() int            // 队列长度
 	IsEmpty() bool       // 是否为空
 }
@@ -66,6 +67,19 @@ func (q *ConcurrentArrayBlockingQueue[T]) Dequeue() (T, error) {
 	q.size--
 	q.cond.Signal()
 	return val, nil
+}
+
+// Peek 查看队首元素但不移除
+func (q *ConcurrentArrayBlockingQueue[T]) Peek() (T, error) {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+
+	if q.size == 0 {
+		var zero T
+		return zero, ErrQueueEmpty
+	}
+
+	return q.data[q.front], nil
 }
 
 func (q *ConcurrentArrayBlockingQueue[T]) Len() int {
@@ -132,6 +146,19 @@ func (q *ConcurrentLinkedBlockingQueue[T]) Dequeue() (T, error) {
 	return n.val, nil
 }
 
+// Peek 查看队首元素但不移除
+func (q *ConcurrentLinkedBlockingQueue[T]) Peek() (T, error) {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+
+	if q.head.next == nil {
+		var zero T
+		return zero, ErrQueueEmpty
+	}
+
+	return q.head.next.val, nil
+}
+
 func (q *ConcurrentLinkedBlockingQueue[T]) Len() int {
 	q.mu.Lock()
 	defer q.mu.Unlock()
@@ -190,6 +217,12 @@ func (q *ConcurrentPriorityQueue[T]) EnqueueWithPriority(val T, priority int) er
 	return nil
 }
 
+// Enqueue 使用默认优先级入队（实现Queue接口）
+func (q *ConcurrentPriorityQueue[T]) Enqueue(val T) error {
+	// 默认使用中等优先级5
+	return q.EnqueueWithPriority(val, 5)
+}
+
 // Dequeue 按优先级出队
 func (q *ConcurrentPriorityQueue[T]) Dequeue() (T, error) {
 	q.mu.Lock()
@@ -199,6 +232,20 @@ func (q *ConcurrentPriorityQueue[T]) Dequeue() (T, error) {
 	}
 	item := heap.Pop(&q.pq).(*priorityItem[T])
 	return item.value, nil
+}
+
+// Peek 查看优先级最高的元素但不移除
+func (q *ConcurrentPriorityQueue[T]) Peek() (T, error) {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+
+	if q.pq.Len() == 0 {
+		var zero T
+		return zero, ErrQueueEmpty
+	}
+
+	// 返回堆顶元素（优先级最高的元素）
+	return q.pq[0].value, nil
 }
 
 func (q *ConcurrentPriorityQueue[T]) Len() int {
@@ -253,7 +300,7 @@ func NewDelayQueue[T any]() *DelayQueue[T] {
 // val 是要添加的元素值。
 // expireAt 是元素的绝对到期时间 (UTC 时间或带时区的时间)。
 // 此方法是线程安全的。
-func (q *DelayQueue[T]) Enqueue(val T, expireAt time.Time) error {
+func (q *DelayQueue[T]) EnqueueWithDelay(val T, expireAt time.Time) error {
 	q.mu.Lock()         // 获取锁以保护共享资源 pq
 	defer q.mu.Unlock() // 确保在函数退出时释放锁
 
@@ -265,6 +312,12 @@ func (q *DelayQueue[T]) Enqueue(val T, expireAt time.Time) error {
 	heap.Push(&q.pq, item) // 将元素推入堆中，heap 包会自动调用 h.Push 并维护堆属性
 	q.cond.Signal()        // 通知一个可能因队列为空或等待特定到期时间而阻塞的 Dequeue goroutine
 	return nil
+}
+
+// Enqueue 将一个元素添加到延迟队列中，使用默认的短延迟（实现Queue接口）
+func (q *DelayQueue[T]) Enqueue(val T) error {
+	// 默认使用10毫秒的延迟
+	return q.EnqueueWithDelay(val, time.Now().Add(10*time.Millisecond))
 }
 
 // Dequeue 从延迟队列中获取一个已到期的元素。
@@ -333,6 +386,22 @@ func (q *DelayQueue[T]) Dequeue() (T, error) {
 		return poppedItem.Value, nil
 	}
 	// 此处代码不可达，因为外层是 for {} 无限循环，且总有返回路径（return 或 continue）
+}
+
+// Peek 查看下一个可能出队的元素，但不移除
+// 如果队列为空，返回错误
+// 如果队首元素未到期，仍然返回它，但调用者需要检查DelayItem.ExpireAt来确定是否已到期
+func (q *DelayQueue[T]) Peek() (T, error) {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+
+	if q.pq.Len() == 0 {
+		var zero T
+		return zero, ErrQueueEmpty
+	}
+
+	// 返回堆顶元素（到期时间最早的元素）
+	return q.pq[0].Value, nil
 }
 
 func (q *DelayQueue[T]) Len() int {

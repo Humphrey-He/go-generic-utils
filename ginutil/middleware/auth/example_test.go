@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"time"
 
-	"github.com/noobtrump/go-generic-utils/ginutil/middleware/auth"
+	"github.com/Humphrey-He/go-generic-utils/ginutil/middleware/auth"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"

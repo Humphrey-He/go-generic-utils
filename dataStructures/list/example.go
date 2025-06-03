@@ -1,4 +1,4 @@
-// Copyright 2023 ecodeclub
+// Copyright 2024 Humphrey-He
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -165,7 +165,7 @@ func ExampleOrderList() {
 
 	// 创建一个示例订单
 	order1 := Order{
-		ID:     "ORD20230001",
+		ID:     "ORD20240001",
 		UserID: "user123",
 		Items: []OrderItem{
 			{
@@ -198,12 +198,12 @@ func ExampleOrderList() {
 	_ = orderList.Append(order1)
 
 	// 查找订单
-	if foundOrder, err := orderList.FindByID("ORD20230001"); err == nil {
+	if foundOrder, err := orderList.FindByID("ORD20240001"); err == nil {
 		fmt.Printf("找到订单：%s，总金额：%.2f元\n", foundOrder.ID, foundOrder.TotalAmount)
 	}
 
 	// 更新订单状态为已支付
-	_ = orderList.UpdateOrderStatus("ORD20230001", OrderStatusPaid)
+	_ = orderList.UpdateOrderStatus("ORD20240001", OrderStatusPaid)
 
 	// 查找特定状态的订单
 	paidOrders := orderList.FindByStatus(OrderStatusPaid)
@@ -214,7 +214,7 @@ func ExampleOrderList() {
 	fmt.Printf("用户user123的订单数量：%d\n", len(userOrders))
 
 	// Output:
-	// 找到订单：ORD20230001，总金额：1037.20元
+	// 找到订单：ORD20240001，总金额：1037.20元
 	// 已支付订单数量：1
 	// 用户user123的订单数量：1
 }
