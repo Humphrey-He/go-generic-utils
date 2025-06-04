@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/Humphrey-He/go-generic-utils/internal/errs"
-
 	"github.com/stretchr/testify/assert"
 )
 
@@ -196,13 +194,13 @@ func TestConcurrentList_Delete(t *testing.T) {
 			name:    "index out of range",
 			list:    newConcurrentListOfSlice([]int{123, 100}),
 			index:   12,
-			wantErr: errs.NewErrIndexOutOfRange(2, 12),
+			wantErr: fmt.Errorf("ggu: 下标超出范围，长度 %d, 下标 %d", 2, 12),
 		},
 		{
 			name:    "index less than 0",
 			list:    newConcurrentListOfSlice([]int{123, 100}),
 			index:   -1,
-			wantErr: errs.NewErrIndexOutOfRange(2, -1),
+			wantErr: fmt.Errorf("ggu: 下标超出范围，长度 %d, 下标 %d", 2, -1),
 		},
 		{
 			name:      "index last",
@@ -246,7 +244,7 @@ func TestConcurrentList_Len(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			actual := testCase.list.Cap()
+			actual := testCase.list.Len()
 			assert.Equal(t, testCase.expectLen, actual)
 		})
 	}
@@ -402,6 +400,9 @@ func TestConcurrentList_Set(t *testing.T) {
 }
 
 func newConcurrentListOfSlice[T any](ts []T) *ConcurrentList[T] {
-	var list List[T] = NewArrayListOf(ts)
-	return &ConcurrentList[T]{List: list}
+	res := NewConcurrentList[T](len(ts))
+	for _, t := range ts {
+		_ = res.Append(t)
+	}
+	return res
 }
