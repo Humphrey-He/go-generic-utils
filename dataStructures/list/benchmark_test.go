@@ -163,105 +163,169 @@ func benchmarkListSort(b *testing.B, createList func() List[int], sizes []int) {
 	}
 }
 
-// ArrayList 基准测试
+// 运行基准测试并打印结果
+func RunBenchmarkAndPrintResults(b *testing.B, name string, f func(b *testing.B)) {
+	result := testing.Benchmark(func(b *testing.B) {
+		f(b)
+	})
+
+	fmt.Printf("基准测试 %s:\n", name)
+	fmt.Printf("  操作次数: %d\n", result.N)
+	fmt.Printf("  每次操作: %.2f ns/op\n", float64(result.NsPerOp()))
+	fmt.Printf("  内存分配: %d 次, %.2f bytes/op\n", result.MemAllocs, float64(result.AllocsPerOp()))
+	fmt.Printf("  内存总量: %d bytes\n", result.AllocedBytesPerOp())
+	fmt.Println()
+}
+
+// 测试不同列表实现的性能比较
+func TestListImplementationsBenchmark(t *testing.T) {
+	t.Run("列表实现性能比较", func(t *testing.T) {
+		// 跳过自动测试，只在手动请求时运行
+		if testing.Short() {
+			t.Skip("跳过基准测试")
+		}
+
+		// 测试Append操作
+		RunBenchmarkAndPrintResults(nil, "ArrayList_Append_10000", func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				list := NewArrayList[int](0)
+				for j := 0; j < 10000; j++ {
+					_ = list.Append(j)
+				}
+			}
+		})
+
+		RunBenchmarkAndPrintResults(nil, "LinkedList_Append_10000", func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				list := NewLinkedList[int]()
+				for j := 0; j < 10000; j++ {
+					_ = list.Append(j)
+				}
+			}
+		})
+
+		RunBenchmarkAndPrintResults(nil, "ConcurrentList_Append_10000", func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				list := NewConcurrentList[int](0)
+				for j := 0; j < 10000; j++ {
+					_ = list.Append(j)
+				}
+			}
+		})
+
+		// 测试Get操作
+		RunBenchmarkAndPrintResults(nil, "ArrayList_Get_10000", func(b *testing.B) {
+			list := NewArrayList[int](10000)
+			for j := 0; j < 10000; j++ {
+				_ = list.Append(j)
+			}
+			b.ResetTimer()
+			for i := 0; i < b.N; i++ {
+				for j := 0; j < 100; j++ {
+					index := j * 100 // 均匀分布的访问
+					_, _ = list.Get(index)
+				}
+			}
+		})
+
+		RunBenchmarkAndPrintResults(nil, "LinkedList_Get_10000", func(b *testing.B) {
+			list := NewLinkedList[int]()
+			for j := 0; j < 10000; j++ {
+				_ = list.Append(j)
+			}
+			b.ResetTimer()
+			for i := 0; i < b.N; i++ {
+				for j := 0; j < 100; j++ {
+					index := j * 100 // 均匀分布的访问
+					_, _ = list.Get(index)
+				}
+			}
+		})
+
+		RunBenchmarkAndPrintResults(nil, "ConcurrentList_Get_10000", func(b *testing.B) {
+			list := NewConcurrentList[int](10000)
+			for j := 0; j < 10000; j++ {
+				_ = list.Append(j)
+			}
+			b.ResetTimer()
+			for i := 0; i < b.N; i++ {
+				for j := 0; j < 100; j++ {
+					index := j * 100 // 均匀分布的访问
+					_, _ = list.Get(index)
+				}
+			}
+		})
+	})
+}
+
+// 标准基准测试函数，用于go test -bench命令
 func BenchmarkArrayList_Append(b *testing.B) {
-	sizes := []int{10, 100, 1000, 10000, 100000}
-	benchmarkListAppend(b, func() List[int] {
-		return NewArrayList[int](0)
-	}, sizes)
+	for i := 0; i < b.N; i++ {
+		list := NewArrayList[int](0)
+		for j := 0; j < 1000; j++ {
+			_ = list.Append(j)
+		}
+	}
+}
+
+func BenchmarkLinkedList_Append(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		list := NewLinkedList[int]()
+		for j := 0; j < 1000; j++ {
+			_ = list.Append(j)
+		}
+	}
+}
+
+func BenchmarkConcurrentList_Append(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		list := NewConcurrentList[int](0)
+		for j := 0; j < 1000; j++ {
+			_ = list.Append(j)
+		}
+	}
 }
 
 func BenchmarkArrayList_Get(b *testing.B) {
-	sizes := []int{10, 100, 1000, 10000, 100000}
-	benchmarkListGet(b, func() List[int] {
-		return NewArrayList[int](0)
-	}, sizes)
-}
-
-func BenchmarkArrayList_Add(b *testing.B) {
-	sizes := []int{10, 100, 1000, 10000}
-	benchmarkListAdd(b, func() List[int] {
-		return NewArrayList[int](0)
-	}, sizes)
-}
-
-func BenchmarkArrayList_Delete(b *testing.B) {
-	sizes := []int{10, 100, 1000, 10000}
-	benchmarkListDelete(b, func() List[int] {
-		return NewArrayList[int](0)
-	}, sizes)
-}
-
-func BenchmarkArrayList_Range(b *testing.B) {
-	sizes := []int{10, 100, 1000, 10000, 100000}
-	benchmarkListRange(b, func() List[int] {
-		return NewArrayList[int](0)
-	}, sizes)
-}
-
-func BenchmarkArrayList_Sort(b *testing.B) {
-	sizes := []int{10, 100, 1000, 10000}
-	benchmarkListSort(b, func() List[int] {
-		return NewArrayList[int](0)
-	}, sizes)
-}
-
-// LinkedList 基准测试
-func BenchmarkLinkedList_Append(b *testing.B) {
-	sizes := []int{10, 100, 1000, 10000, 100000}
-	benchmarkListAppend(b, func() List[int] {
-		return NewLinkedList[int]()
-	}, sizes)
+	list := NewArrayList[int](1000)
+	for j := 0; j < 1000; j++ {
+		_ = list.Append(j)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		for j := 0; j < 100; j++ {
+			index := j * 10 % 1000
+			_, _ = list.Get(index)
+		}
+	}
 }
 
 func BenchmarkLinkedList_GetItems(b *testing.B) {
-	sizes := []int{10, 100, 1000, 10000}
-	benchmarkListGet(b, func() List[int] {
-		return NewLinkedList[int]()
-	}, sizes)
-}
-
-func BenchmarkLinkedList_AddItems(b *testing.B) {
-	sizes := []int{10, 100, 1000, 10000}
-	benchmarkListAdd(b, func() List[int] {
-		return NewLinkedList[int]()
-	}, sizes)
-}
-
-func BenchmarkLinkedList_Delete(b *testing.B) {
-	sizes := []int{10, 100, 1000, 10000}
-	benchmarkListDelete(b, func() List[int] {
-		return NewLinkedList[int]()
-	}, sizes)
-}
-
-func BenchmarkLinkedList_Range(b *testing.B) {
-	sizes := []int{10, 100, 1000, 10000, 100000}
-	benchmarkListRange(b, func() List[int] {
-		return NewLinkedList[int]()
-	}, sizes)
-}
-
-func BenchmarkLinkedList_Sort(b *testing.B) {
-	sizes := []int{10, 100, 1000, 10000}
-	benchmarkListSort(b, func() List[int] {
-		return NewLinkedList[int]()
-	}, sizes)
-}
-
-// ConcurrentList 基准测试
-func BenchmarkConcurrentList_Append(b *testing.B) {
-	sizes := []int{10, 100, 1000, 10000}
-	benchmarkListAppend(b, func() List[int] {
-		return NewConcurrentList[int](0)
-	}, sizes)
+	list := NewLinkedList[int]()
+	for j := 0; j < 1000; j++ {
+		_ = list.Append(j)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		for j := 0; j < 100; j++ {
+			index := j * 10 % 1000
+			_, _ = list.Get(index)
+		}
+	}
 }
 
 func BenchmarkConcurrentList_Get(b *testing.B) {
-	sizes := []int{10, 100, 1000, 10000}
-	benchmarkListGet(b, func() List[int] {
-		return NewConcurrentList[int](0)
-	}, sizes)
+	list := NewConcurrentList[int](1000)
+	for j := 0; j < 1000; j++ {
+		_ = list.Append(j)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		for j := 0; j < 100; j++ {
+			index := j * 10 % 1000
+			_, _ = list.Get(index)
+		}
+	}
 }
 
 // 并发添加测试

@@ -15,10 +15,25 @@
 package maputils
 
 import (
+	"fmt"
 	"strconv"
 	"sync"
 	"testing"
 )
+
+// RunBenchmarkAndPrintResults 运行基准测试并打印结果
+func RunBenchmarkAndPrintResults(b *testing.B, name string, f func(b *testing.B)) {
+	result := testing.Benchmark(func(b *testing.B) {
+		f(b)
+	})
+
+	fmt.Printf("基准测试 %s:\n", name)
+	fmt.Printf("  操作次数: %d\n", result.N)
+	fmt.Printf("  每次操作: %.2f ns/op\n", float64(result.NsPerOp()))
+	fmt.Printf("  内存分配: %d 次, %.2f bytes/op\n", result.MemAllocs, float64(result.AllocsPerOp()))
+	fmt.Printf("  内存总量: %d bytes\n", result.AllocedBytesPerOp())
+	fmt.Println()
+}
 
 // 准备基准测试数据
 func prepareIntStringMap(n int) map[int]string {

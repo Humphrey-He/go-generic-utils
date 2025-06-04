@@ -49,13 +49,7 @@ func (c *ConcurrentList[T]) Get(index int) (T, error) {
 	c.lock.RLock()
 	defer c.lock.RUnlock()
 
-	// 直接使用内部List的长度
-	l := c.List.Len()
-	if index < 0 || index >= l {
-		var t T
-		return t, NewIndexOutOfRangeError(l, index)
-	}
-
+	// 直接使用内部List的Len方法，避免再次获取锁
 	return c.List.Get(index)
 }
 
@@ -71,12 +65,7 @@ func (c *ConcurrentList[T]) Add(index int, t T) error {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 
-	// 直接使用内部List的长度，避免再次获取锁
-	l := c.List.Len()
-	if index < 0 || index > l {
-		return NewIndexOutOfRangeError(l, index)
-	}
-
+	// 直接使用内部List的Len方法，避免再次获取锁
 	return c.List.Add(index, t)
 }
 
@@ -85,12 +74,7 @@ func (c *ConcurrentList[T]) Set(index int, t T) error {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 
-	// 直接使用内部List的长度
-	l := c.List.Len()
-	if index < 0 || index >= l {
-		return NewIndexOutOfRangeError(l, index)
-	}
-
+	// 直接使用内部List的Set方法，它会检查索引范围
 	return c.List.Set(index, t)
 }
 
@@ -99,13 +83,7 @@ func (c *ConcurrentList[T]) Delete(index int) (T, error) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 
-	// 直接使用内部List的长度
-	l := c.List.Len()
-	if index < 0 || index >= l {
-		var t T
-		return t, NewIndexOutOfRangeError(l, index)
-	}
-
+	// 直接使用内部List的Delete方法，它会检查索引范围
 	return c.List.Delete(index)
 }
 

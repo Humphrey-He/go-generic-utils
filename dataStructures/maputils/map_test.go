@@ -6,11 +6,87 @@ package maputils
 
 import (
 	"sort"
+	"strconv"
 	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
+
+// TestRunBenchmarks 运行并输出基准测试结果
+func TestRunBenchmarks(t *testing.T) {
+	t.Run("基准测试结果", func(t *testing.T) {
+		// 跳过自动测试，只在手动请求时运行
+		if testing.Short() {
+			t.Skip("跳过基准测试")
+		}
+
+		// 运行GenericMap基本操作的基准测试
+		RunBenchmarkAndPrintResults(nil, "GenericMap_Set_Get_100", func(b *testing.B) {
+			m := NewGenericMap[string, int]()
+			b.ResetTimer()
+			for i := 0; i < b.N; i++ {
+				for j := 0; j < 100; j++ {
+					key := "key" + strconv.Itoa(j)
+					m.Set(key, j)
+					_, _ = m.Get(key)
+				}
+			}
+		})
+
+		// 运行SyncMap基本操作的基准测试
+		RunBenchmarkAndPrintResults(nil, "SyncMap_Set_Get_100", func(b *testing.B) {
+			m := NewSyncMap[string, int]()
+			b.ResetTimer()
+			for i := 0; i < b.N; i++ {
+				for j := 0; j < 100; j++ {
+					key := "key" + strconv.Itoa(j)
+					m.Set(key, j)
+					_, _ = m.Get(key)
+				}
+			}
+		})
+
+		// 运行LinkedMap基本操作的基准测试
+		RunBenchmarkAndPrintResults(nil, "LinkedMap_Set_Get_100", func(b *testing.B) {
+			m := NewLinkedMap[string, int]()
+			b.ResetTimer()
+			for i := 0; i < b.N; i++ {
+				for j := 0; j < 100; j++ {
+					key := "key" + strconv.Itoa(j)
+					m.Set(key, j)
+					_, _ = m.Get(key)
+				}
+			}
+		})
+
+		// 运行TreeMap基本操作的基准测试
+		RunBenchmarkAndPrintResults(nil, "TreeMap_Set_Get_100", func(b *testing.B) {
+			m := NewTreeMap[string, int]()
+			b.ResetTimer()
+			for i := 0; i < b.N; i++ {
+				for j := 0; j < 100; j++ {
+					key := "key" + strconv.Itoa(j)
+					m.Set(key, j)
+					_, _ = m.Get(key)
+				}
+			}
+		})
+
+		// 运行MultiMap基本操作的基准测试
+		RunBenchmarkAndPrintResults(nil, "MultiMap_Add_Get_100", func(b *testing.B) {
+			m := NewMultiMap[string, int]()
+			b.ResetTimer()
+			for i := 0; i < b.N; i++ {
+				for j := 0; j < 100; j++ {
+					key := "key" + strconv.Itoa(j%10) // 使用10个不同的键
+					m.Add(key, j)
+					_ = m.Get(key)
+				}
+			}
+		})
+	})
+}
 
 // 测试泛型Map基本功能
 func TestGenericMap_Basic(t *testing.T) {
